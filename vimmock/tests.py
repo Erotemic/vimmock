@@ -27,6 +27,16 @@ class TestVimMock(unittest.TestCase):
         self.vim.setup_text('foobar')
         self.vim.current.buffer.setup_text.assert_called_once_with('foobar')
 
+    def test_open_file(self):
+        filepath = vimmock.mocked.__file__.replace('*.pyc', '*.py')
+        self.vim.open_file(filepath)
+        assert self.vim.current.buffer.name == filepath
+
+    def test_eval(self):
+        assert self.vim.eval('&encoding') == 'utf-8'
+        with self.assertRaises(NotImplementedError):
+            self.vim.eval(':e ~')
+
 
 class TestBufferMock(unittest.TestCase):
 
@@ -61,6 +71,11 @@ class TestBufferMock(unittest.TestCase):
     def test_setup_text(self):
         self.buffer.setup_text('\n'.join(('foo', 'bar')))
 
+    def test_append(self):
+        self.buffer.append(['spam'])
+        assert self.buffer._text == 'foo\nbar\nbaz\nspam'
+
+
 class TestCurrentMock(unittest.TestCase):
 
     def setUp(self):
@@ -84,4 +99,3 @@ class TestPatch(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
