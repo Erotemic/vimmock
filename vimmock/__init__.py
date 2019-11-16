@@ -1,13 +1,14 @@
 """
 vim mock object for easier testing of vim plugins written in Python.
 """
-import sys
 from vimmock.mocked import VimMock
 
-VERSION = (0, 2, 0, 'dev')
 
 __all__ = ['VimMock']
-__version__ = '.'.join((str(each) for each in VERSION[:4]))
+__version__ = '0.2.0.dev'
+
+
+VERSION = __version__.split('.')
 
 
 def get_version():
@@ -21,5 +22,5 @@ def patch_vim():
     """
     Sets new ``VimMock`` instance under ``vim`` key within ``sys.modules``.
     """
+    import sys
     sys.modules['vim'] = VimMock()
-
